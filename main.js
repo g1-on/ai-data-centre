@@ -58,37 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateHorizontalScroll, 500);
     setTimeout(updateHorizontalScroll, 2000);
 
-    // Custom Digital Cursor Logic
-    const cursor = document.querySelector('.custom-cursor');
-    const cursorOutline = document.querySelector('.custom-cursor-outline');
 
-    if (cursor && cursorOutline) {
-        window.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
-                const posX = e.clientX;
-                const posY = e.clientY;
-
-                cursor.style.left = `${posX}px`;
-                cursor.style.top = `${posY}px`;
-
-                cursorOutline.animate({
-                    left: `${posX - 35}px`,
-                    top: `${posY - 35}px` 
-                }, { duration: 400, fill: 'forwards' });
-
-
-            }
-        });
-
-        document.querySelectorAll('a, button, .glass-card, .logo').forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                cursorOutline.classList.add('cursor-hover');
-            });
-            link.addEventListener('mouseleave', () => {
-                cursorOutline.classList.remove('cursor-hover');
-            });
-        });
-    }
 });
 
 // Navbar scroll effect
