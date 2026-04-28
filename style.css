@@ -730,11 +730,20 @@ body {
 
 .clickable-image {
     cursor: pointer;
-    transition: transform 0.3s;
+    transition: all 0.4s ease;
 }
 
 .clickable-image:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
+    box-shadow: 0 0 30px var(--primary-color), 0 0 60px var(--secondary-color);
+    border-radius: 15px;
+    z-index: 5;
+    position: relative;
+}
+
+/* Ensure background hero image doesn't get awkward border radius on hover */
+.hero-bg.clickable-image:hover {
+    border-radius: 0;
 }
 
 
