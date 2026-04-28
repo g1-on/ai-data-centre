@@ -670,8 +670,10 @@ footer {
 }
 
 /* Custom Digital Cursor Styles */
-body {
-    cursor: none; /* Hide default cursor on desktop */
+@media (min-width: 769px) {
+    *, *::before, *::after {
+        cursor: none !important;
+    }
 }
 
 .custom-cursor {
@@ -801,8 +803,10 @@ body {
 
 
 @media (max-width: 768px) {
-    body { cursor: auto; }
-    .custom-cursor, .custom-cursor-outline { display: none; }
+    .custom-cursor,
+    .custom-cursor-outline {
+        display: none !important;
+    }
 }
 
 .cursor-hover {
