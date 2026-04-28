@@ -10,16 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const horizontalContainer = document.querySelector('.horizontal-container');
     if (!horizontalContainer) return;
 
-    let lastPage = 0;
-    const lightningFlash = document.getElementById('lightning-flash');
-
-    function triggerLightning() {
-        if (!lightningFlash) return;
-        lightningFlash.classList.remove('flash-active');
-        void lightningFlash.offsetWidth; // Trigger reflow
-        lightningFlash.classList.add('flash-active');
-    }
-
     function updateHorizontalScroll() {
         if (window.innerWidth <= 768) {
             document.body.style.height = "auto";
@@ -57,12 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.body.style.backgroundPosition = `-${scrollValue * 0.1}px 0`;
-
-        const currentPage = Math.round(scrollValue / viewportWidth);
-        if (currentPage !== lastPage) {
-            triggerLightning();
-            lastPage = currentPage;
-        }
     }
 
     window.addEventListener('scroll', updateHorizontalScroll);
