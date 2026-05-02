@@ -1,14 +1,26 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // Splash Screen Timeout
-    const splash = document.getElementById('splash-screen');
-    setTimeout(() => {
-        if (splash) {
-            splash.classList.add('fade-out');
-        }
-    }, 800); // Shortened to 0.8 seconds for speed
+console.log('MAIN.JS EXECUTING');
+// Splash Screen Timeout
+const splash = document.getElementById('splash-screen');
+setTimeout(() => {
+    if (splash) {
+        splash.classList.add('fade-out');
+    }
+}, 800);
+setTimeout(() => {
+    if (splash) splash.style.display = 'none';
+}, 2000); // Absolute fallback to clear the screen
 
-    const horizontalContainer = document.querySelector('.horizontal-container');
-    if (!horizontalContainer) return;
+const horizontalContainer = document.querySelector('.horizontal-container');
+if (horizontalContainer) {
+    let lastSectionIndex = 0;
+    const lightningOverlay = document.getElementById('lightning-overlay');
+
+    function triggerLightning() {
+        if (!lightningOverlay) return;
+        lightningOverlay.classList.remove('flash-active');
+        void lightningOverlay.offsetWidth; // Trigger reflow
+        lightningOverlay.classList.add('flash-active');
+    }
 
     function updateHorizontalScroll() {
         if (window.innerWidth <= 768) {
@@ -47,6 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.body.style.backgroundPosition = `-${scrollValue * 0.1}px 0`;
+
+        // Lightning Trigger on section change
+        const currentSectionIndex = Math.round(scrollValue / window.innerWidth);
+        if (currentSectionIndex !== lastSectionIndex) {
+            triggerLightning();
+            lastSectionIndex = currentSectionIndex;
+        }
     }
 
     window.addEventListener('scroll', updateHorizontalScroll);
@@ -64,20 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cursor && cursorOutline) {
         window.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
-                const posX = e.clientX;
-                const posY = e.clientY;
+            const posX = e.clientX;
+            const posY = e.clientY;
 
-                cursor.style.left = `${posX}px`;
-                cursor.style.top = `${posY}px`;
+            cursor.style.left = `${posX}px`;
+            cursor.style.top = `${posY}px`;
 
-                cursorOutline.animate({
-                    left: `${posX - 35}px`,
-                    top: `${posY - 35}px` 
-                }, { duration: 400, fill: 'forwards' });
-
-
-            }
+            cursorOutline.animate({
+                left: `${posX - 35}px`,
+                top: `${posY - 35}px` 
+            }, { duration: 400, fill: 'forwards' });
         });
 
         document.querySelectorAll('a, button, .glass-card, .logo').forEach(link => {
@@ -89,7 +104,33 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-});
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"], .btn[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                if (window.innerWidth > 768) {
+                    // Robust calculation of original horizontal offset
+                    const currentScrollX = window.scrollY;
+                    const sectionRect = targetSection.getBoundingClientRect();
+                    const targetX = sectionRect.left + currentScrollX;
+                    
+                    window.scrollTo({
+                        top: targetX,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+}
 
 // Navbar scroll effect
 window.addEventListener('scroll', () => {
@@ -101,37 +142,18 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetSection = document.querySelector(targetId);
-        if (targetSection) {
-            if (window.innerWidth > 768) {
-                const targetX = targetSection.offsetLeft;
-                window.scrollTo({
-                    top: targetX,
-                    behavior: 'smooth'
-                });
-            } else {
-                targetSection.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-    });
-});
-
 // Form submission
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Thank you for your interest! Our team will contact you shortly.');
+        alert('Thank you for your message! Our team will contact you soon.');
         contactForm.reset();
     });
 }
+
+
+
 
 // Modal Logic
 const modal = document.getElementById('image-modal');
